@@ -1,0 +1,3 @@
+[submodule "sonar_poller"]
+	path = sonar_poller
+	url = https://github.com/sonarsoftwareinc/poller
