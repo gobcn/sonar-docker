@@ -29,8 +29,10 @@ RUN sed -i 's/^session.gc_probability = 0/session.gc_probability = 1/' /etc/php/
 && sed -i 's/^session.gc_maxlifetime = 1440/session.gc_maxlifetime = 1440/' /etc/php/8.3/fpm/php.ini
 # clone and setup poller
 RUN cd /usr/share && \
-rm -rf sonar_poller && \
-git clone https://github.com/SonarSoftwareInc/poller.git sonar_poller
+rm -rf sonar_poller
+
+COPY sonar_poller /usr/share/sonar_poller
+
 # set permissions
 RUN chown -R www-data:www-data /usr/share/sonar_poller
 # install NGINX and self signed cert
