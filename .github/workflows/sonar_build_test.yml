@@ -16,6 +16,7 @@ permissions:
 jobs:
   test-linux:
     name: Test building container on Ubuntu
+    if: github.event_name != 'push' || !startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
 
     steps:
@@ -48,8 +49,6 @@ jobs:
 
   publish-image:
     name: Build and publish container image
-    needs:
-      - test-linux
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
 
