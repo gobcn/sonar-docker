@@ -1,0 +1,20 @@
+networks: 
+  customer:
+    external: false
+
+volumes:
+  sonar-poller-customer:
+    external: true
+
+services:
+  sonar-poller-customer:
+    image: ghcr.io/gobcn/sonar-docker:latest
+    container_name: sonar-poller-customer
+    restart: always
+    networks:
+      - customer
+    volumes:
+      - sonar-poller-customer:/usr/share/sonar_poller/permanent_config
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "443:443"
