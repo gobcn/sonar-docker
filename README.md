@@ -15,9 +15,11 @@ Docker image for running [Sonar Poller](github.com/sonarsoftwareinc/poller).
 Supervisor manages NGINX, PHP-FPM, and the poller process.
 
 ## Docker configuration
-It is suggested to use this image with Docker Compose. 
-
 An [example docker compose file](docker-compose.yaml) is provided. 
+
+The example compose uses external volumes, to create your volume run the following command: 
+
+```docker volume create sonar-poller-customer```.
 
 ## Poller configuration
 
