@@ -23,7 +23,7 @@ The example compose uses external volumes, to create your volume run the followi
 
 ## Poller configuration
 
-See the [Sonar Poller documentation](github.com/sonarsoftwareinc/poller) for configuration and usage.
+See the [Sonar Poller documentation](https://github.com/sonarsoftwareinc/poller) for configuration and usage.
 
 ## License
 
