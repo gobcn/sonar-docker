@@ -60,6 +60,18 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Fetch sonar_poller tags
+        working-directory: sonar_poller
+        run: git fetch --tags
+
+      - name: Get sonar_poller version
+        id: version
+        working-directory: sonar_poller
+        run: echo "version=$(git describe --tags)" >> "$GITHUB_OUTPUT"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@96fe6ef7f33517b61c61be40b68a1882f3264fb8
@@ -92,3 +104,5 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            SONAR_POLLER_VERSION=${{ steps.version.outputs.version }}
