@@ -1,4 +1,4 @@
-# Sonar Poller Docker image
+# Sonar Poller Docker Image
 
 Docker image for running [Sonar Poller](github.com/sonarsoftwareinc/poller).
 
