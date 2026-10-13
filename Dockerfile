@@ -2,7 +2,7 @@
 FROM ubuntu:noble
 
 RUN apt-get -yq update && \
-apt-get install -y nginx php8.3-cli php8.3-xml php8.3-common php8.3-gmp php8.3-dev php8.3-sqlite3 php8.3-zip php8.3-fpm php8.3-mbstring libev-dev composer openssl php-pear snmp supervisor
+apt-get install -y nginx php8.3-cli php8.3-xml php8.3-common php8.3-gmp php8.3-dev php8.3-sqlite3 php8.3-zip php8.3-fpm php8.3-mbstring libev-dev composer openssl php-pear snmp supervisor curl
 
 
 RUN pecl channel-update pecl.php.net && \
