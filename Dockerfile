@@ -16,18 +16,6 @@ setcap cap_net_raw+ep /usr/bin/fping && \
 ## Maintain compatability with legacy version so code stays the same for both
 ln -s /usr/bin/fping /usr/local/sbin/fping
 
-### Handled outside of container, on host / by compose. Preserved for debugging.
-## Setup sysctl for better monitoring performance
-#grep -qxF 'net.core.somaxconn=4096' /etc/sysctl.conf || echo "net.core.somaxconn=4096" >> /etc/sysctl.conf
-#grep -qxF 'net.ipv4.icmp_ratelimit=0' /etc/sysctl.conf || echo "net.ipv4.icmp_ratelimit=0" >> /etc/sysctl.conf
-#grep -qxF 'net.ipv4.icmp_msgs_per_sec=100000' /etc/sysctl.conf || echo "net.ipv4.icmp_msgs_per_sec=100000" >> /etc/sysctl.conf
-#grep -qxF 'net.ipv4.icmp_msgs_burst=5000' /etc/sysctl.conf || echo "net.ipv4.icmp_msgs_burst=5000" >> /etc/sysctl.conf
-#grep -qxF 'fs.file-max = 500000' /etc/sysctl.conf || echo "fs.file-max = 500000" >> /etc/sysctl.conf
-#/sbin/sysctl -p
-#grep -qxF 'DefaultLimitNOFILE=65535' /etc/systemd/system.conf || echo "DefaultLimitNOFILE=65535" >> /etc/systemd/system.conf
-#grep -qxF '* hard nofile 65535' /etc/security/limits.d/custom.conf || echo "* hard nofile 65535" >> /etc/security/limits.d/custom.conf
-#grep -qxF '* soft nofile 65535' /etc/security/limits.d/custom.conf || echo "* soft nofile 65535" >> /etc/security/limits.d/custom.conf
-
 # Enable garbage collection in PHP directly
 RUN sed -i 's/^session.gc_probability = 0/session.gc_probability = 1/' /etc/php/8.3/fpm/php.ini \
 && sed -i 's/^session.gc_divisor = 100/session.gc_divisor = 100/' /etc/php/8.3/fpm/php.ini \
