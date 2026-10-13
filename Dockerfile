@@ -2,7 +2,7 @@
 FROM ubuntu:noble@sha256:534baea6a22c03a63003dbc8dbe78fe34bc0d7e595d9a9dc9834884ff530eb55
 
 RUN apt-get -yq update && \
-apt-get install -y nginx php8.3-cli php8.3-xml php8.3-common php8.3-gmp php8.3-dev php8.3-sqlite3 php8.3-zip php8.3-fpm php8.3-mbstring libev-dev composer openssl php-pear snmp supervisor curl
+apt-get install -y nginx php8.3-cli php8.3-xml php8.3-common php8.3-gmp php8.3-dev php8.3-sqlite3 php8.3-zip php8.3-fpm php8.3-mbstring libev-dev composer openssl php-pear snmp supervisor curl logrotate
 
 # Fail a RUN if any command in a pipe fails (hadolint DL4006)
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -34,6 +34,13 @@ cp /usr/share/sonar_poller/ssl/default /etc/nginx/sites-available/
 RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
 ln -sf /dev/stderr /var/log/nginx/error.log && \
 sed -i 's|^error_log = .*|error_log = /proc/self/fd/2|' /etc/php/8.3/fpm/php-fpm.conf
+
+# Rotate the poller's own log files using upstream's config (run hourly by supervisord).
+# Swap "create" for "copytruncate" so the poller's long-lived log handle isn't
+# left writing to a rotated-away file; fail the build if the swap didn't apply.
+RUN cp /usr/share/sonar_poller/config/sonar_poller_logs /etc/logrotate.d/ && \
+sed -i 's/^\([[:space:]]*\)create\([[:space:]].*\)\?$/\1copytruncate/' /etc/logrotate.d/sonar_poller_logs && \
+grep -q '^[[:space:]]*copytruncate$' /etc/logrotate.d/sonar_poller_logs
 
 # Write version supplied by the build
 ARG SONAR_POLLER_VERSION
