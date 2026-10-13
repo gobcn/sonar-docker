@@ -30,6 +30,11 @@ COPY --chown=www-data:www-data sonar_poller /usr/share/sonar_poller
 RUN cp /usr/share/sonar_poller/ssl/self-signed.conf /etc/nginx/snippets/ && \
 cp /usr/share/sonar_poller/ssl/default /etc/nginx/sites-available/
 
+# Send nginx and php-fpm logs to the container's stdout/stderr instead of files
+RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
+ln -sf /dev/stderr /var/log/nginx/error.log && \
+sed -i 's|^error_log = .*|error_log = /proc/self/fd/2|' /etc/php/8.3/fpm/php-fpm.conf
+
 # Write version supplied by the build
 ARG SONAR_POLLER_VERSION
 RUN echo "$SONAR_POLLER_VERSION" > /usr/share/sonar_poller/version
