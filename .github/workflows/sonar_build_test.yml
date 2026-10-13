@@ -87,8 +87,7 @@ jobs:
         run: |
           sleep 10
           docker exec sonar-test supervisorctl status
-          # supervisorctl exits non-zero if any program is not RUNNING
- 
+
       - name: Show logs on failure
         if: failure()
         run: |
