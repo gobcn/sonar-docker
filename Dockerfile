@@ -9,8 +9,8 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN pecl channel-update pecl.php.net && \
 printf "\n" | pecl install ev && \
-grep -qxF 'extension=ev.so' /etc/php/8.3/cli/php.ini || echo "extension=ev.so" >> /etc/php/8.3/cli/php.ini && \
-grep -qxF 'extension=ev.so' /etc/php/8.3/fpm/php.ini || echo "extension=ev.so" >> /etc/php/8.3/fpm/php.ini
+{ grep -qxF 'extension=ev.so' /etc/php/8.3/cli/php.ini || echo "extension=ev.so" >> /etc/php/8.3/cli/php.ini; } && \
+{ grep -qxF 'extension=ev.so' /etc/php/8.3/fpm/php.ini || echo "extension=ev.so" >> /etc/php/8.3/fpm/php.ini; }
 
 ## Install the latest fping
 RUN apt-get install -y fping && \
