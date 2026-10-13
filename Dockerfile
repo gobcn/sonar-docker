@@ -5,7 +5,7 @@ apt-get -yq --no-install-recommends install software-properties-common
 RUN apt-get -y update && \
 apt-get install -y nginx php8.3-cli php8.3-xml php8.3-common php8.3-gmp php8.3-dev php8.3-sqlite3 php8.3-zip php8.3-fpm php8.3-mbstring libev-dev composer openssl php-pear snmp supervisor
 RUN pecl channel-update pecl.php.net && \
-print "\n" | pecl install ev && \
+printf "\n" | pecl install ev && \
 grep -qxF 'extension=ev.so' /etc/php/8.3/cli/php.ini || echo "extension=ev.so" >> /etc/php/8.3/cli/php.ini && \
 grep -qxF 'extension=ev.so' /etc/php/8.3/fpm/php.ini || echo "extension=ev.so" >> /etc/php/8.3/fpm/php.ini
 ## Install the latest fping
