@@ -1,0 +1,4 @@
+failure-threshold: warning
+ignored:
+  - DL3008   # pinning apt package versions isn't practical
+  - DL3002   # last USER is root on purpose; supervisord needs it
