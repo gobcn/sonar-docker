@@ -47,7 +47,9 @@ mkdir -p /var/lib/php-fpm
 
 # perform a (very basic) health check
 HEALTHCHECK --interval=30s --timeout=3s \
-  CMD curl -fks https://localhost || exit 1
+  CMD ["/bin/sh", "-c", "curl -fks https://localhost || exit 1"]
+
+  
 CMD ["/usr/bin/supervisord"]
  
 # expose NGINX
