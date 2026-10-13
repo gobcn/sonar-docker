@@ -4,6 +4,8 @@ FROM ubuntu:noble
 RUN apt-get -yq update && \
 apt-get install -y nginx php8.3-cli php8.3-xml php8.3-common php8.3-gmp php8.3-dev php8.3-sqlite3 php8.3-zip php8.3-fpm php8.3-mbstring libev-dev composer openssl php-pear snmp supervisor curl
 
+# Fail a RUN if any command in a pipe fails (hadolint DL4006)
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN pecl channel-update pecl.php.net && \
 printf "\n" | pecl install ev && \
@@ -37,7 +39,7 @@ RUN mkdir /var/www/.composer && \
 chown www-data:www-data /var/www/.composer && \
 chown -R www-data:www-data /var/lib/nginx
 USER www-data
-RUN cd /usr/share/sonar_poller && composer install
+RUN composer install --working-dir=/usr/share/sonar_poller
 USER root
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 RUN mkdir -p /var/run/php && \
