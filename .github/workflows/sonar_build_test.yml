@@ -43,9 +43,37 @@ jobs:
         with:
           context: .
           platforms: linux/amd64
+          load: true
           tags: test-image:latest
           build-args: |
             SONAR_POLLER_VERSION=${{ steps.version.outputs.version }}
+
+      - name: Start container
+        run: docker run -d --name sonar-test -p 8443:443 test-image:latest
+ 
+      - name: Wait for HTTPS
+        run: |
+          for i in $(seq 1 30); do
+            if curl -fksS -o /dev/null https://localhost:8443/; then
+              echo "HTTPS up after ~$((i * 2))s"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "::error::nginx did not respond on 443 within 60s"
+          exit 1
+ 
+      - name: Check services are running
+        run: |
+          sleep 10
+          docker exec sonar-test supervisorctl status
+          # supervisorctl exits non-zero if any program is not RUNNING
+ 
+      - name: Show logs on failure
+        if: failure()
+        run: |
+          docker logs sonar-test || true
+          docker exec sonar-test sh -c 'tail -n 100 /var/log/supervisor/*.log' || true
 
   publish-image:
     name: Build and publish container image
