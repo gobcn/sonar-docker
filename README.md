@@ -10,6 +10,7 @@ Docker image for running [Sonar Poller](github.com/sonarsoftwareinc/poller).
 - Supervisor
 - SNMP
 - fping
+- logrotate
 - Sonar Poller
 
 Supervisor manages NGINX, PHP-FPM, and the poller process.
