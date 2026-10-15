@@ -22,6 +22,9 @@ ln -s /usr/bin/fping /usr/local/sbin/fping
 RUN sed -i 's/^session.gc_probability = 0/session.gc_probability = 1/' /etc/php/8.3/fpm/php.ini \
 && sed -i 's/^session.gc_divisor = 100/session.gc_divisor = 100/' /etc/php/8.3/fpm/php.ini \
 && sed -i 's/^session.gc_maxlifetime = 1440/session.gc_maxlifetime = 1440/' /etc/php/8.3/fpm/php.ini \
+&& sed -i 's/^session.gc_probability = .*/session.gc_probability = 1/' /etc/php/8.3/cli/php.ini \
+&& sed -i 's/^session.gc_divisor = .*/session.gc_divisor = 100/' /etc/php/8.3/cli/php.ini \
+&& sed -i 's/^session.gc_maxlifetime = 1440/session.gc_maxlifetime = 1440/' /etc/php/8.3/cli/php.ini \
 # PHP-FPM (www-data) must be able to list the session dir for GC to clean
 && install -d -o www-data -g www-data -m 1733 /var/lib/php/sessions
 
