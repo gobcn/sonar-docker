@@ -4,21 +4,44 @@ FROM ghcr.io/php/pie:1.4.5-bin@sha256:9d3e6d9dafa5ae8cf034489260e206a5aa1b488b29
 # Sonar Poller image for Broadband Communications North (BCN)
 FROM ubuntu:noble@sha256:534baea6a22c03a63003dbc8dbe78fe34bc0d7e595d9a9dc9834884ff530eb55
 
-RUN apt-get -yq update && \
-apt-get install -y nginx php8.3-cli php8.3-xml php8.3-common php8.3-gmp php8.3-dev php8.3-sqlite3 php8.3-zip php8.3-fpm php8.3-mbstring libev-dev composer openssl php-pear snmp supervisor curl logrotate
-
 # Fail a RUN if any command in a pipe fails (hadolint DL4006)
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+# Build-time only; keeps apt from prompting without baking it into the runtime env
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update -yq && \
+    apt-get install -yq \
+        composer \
+        curl \
+        fping \
+        libcap2-bin \
+        libev-dev \
+        logrotate \
+        nginx \
+        openssl \
+        php-pear \
+        php8.3-cli \
+        php8.3-common \
+        php8.3-dev \
+        php8.3-fpm \
+        php8.3-gmp \
+        php8.3-mbstring \
+        php8.3-sqlite3 \
+        php8.3-xml \
+        php8.3-zip \
+        snmp \
+        supervisor && \
+    # Let fping send ICMP without root
+    setcap cap_net_raw+ep /usr/bin/fping && \
+    # Maintain compatibility with legacy path so code stays the same for both
+    ln -s /usr/bin/fping /usr/local/sbin/fping && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install the ev extension with PIE; PIE enables it for all PHP SAPIs via phpenmod
 COPY --from=pie /pie /usr/local/bin/pie
 RUN pie install osmanov/pecl-ev
-
-## Install the latest fping
-RUN apt-get install -y fping && \
-setcap cap_net_raw+ep /usr/bin/fping && \
-## Maintain compatability with legacy version so code stays the same for both
-ln -s /usr/bin/fping /usr/local/sbin/fping
 
 # Enable garbage collection in PHP directly
 RUN sed -i 's/^session.gc_probability = 0/session.gc_probability = 1/' /etc/php/8.3/fpm/php.ini \
@@ -65,8 +88,7 @@ mkdir -p /var/lib/php-fpm
 HEALTHCHECK --interval=30s --timeout=3s \
   CMD ["/bin/sh", "-c", "curl -fks https://localhost || exit 1"]
 
-  
 CMD ["/usr/bin/supervisord"]
- 
+
 # expose NGINX
 EXPOSE 443/tcp
