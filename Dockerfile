@@ -1,3 +1,6 @@
+# PIE (PHP Installer for Extensions), pinned so Dependabot can track updates
+FROM ghcr.io/php/pie:1.4.5-bin@sha256:9d3e6d9dafa5ae8cf034489260e206a5aa1b488b29c0ddaea9149826d9e32f52 AS pie
+
 # Sonar Poller image for Broadband Communications North (BCN)
 FROM ubuntu:noble@sha256:534baea6a22c03a63003dbc8dbe78fe34bc0d7e595d9a9dc9834884ff530eb55
 
@@ -7,10 +10,9 @@ apt-get install -y nginx php8.3-cli php8.3-xml php8.3-common php8.3-gmp php8.3-d
 # Fail a RUN if any command in a pipe fails (hadolint DL4006)
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-RUN pecl channel-update pecl.php.net && \
-printf "\n" | pecl install ev && \
-{ grep -qxF 'extension=ev.so' /etc/php/8.3/cli/php.ini || echo "extension=ev.so" >> /etc/php/8.3/cli/php.ini; } && \
-{ grep -qxF 'extension=ev.so' /etc/php/8.3/fpm/php.ini || echo "extension=ev.so" >> /etc/php/8.3/fpm/php.ini; }
+# Install the ev extension with PIE; PIE enables it for all PHP SAPIs via phpenmod
+COPY --from=pie /pie /usr/local/bin/pie
+RUN pie install osmanov/pecl-ev
 
 ## Install the latest fping
 RUN apt-get install -y fping && \
