@@ -21,7 +21,6 @@ RUN apt-get update -yq && \
         logrotate \
         nginx \
         openssl \
-        php-pear \
         php8.3-cli \
         php8.3-common \
         php8.3-dev \
