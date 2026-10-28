@@ -3,7 +3,7 @@
 # PIE (PHP Installer for Extensions), pinned so Dependabot can track updates
 FROM ghcr.io/php/pie:1.4.5-bin@sha256:9d3e6d9dafa5ae8cf034489260e206a5aa1b488b29c0ddaea9149826d9e32f52 AS pie
 # Ubuntu Noble (Latest tag)
-FROM ubuntu:noble@sha256:534baea6a22c03a63003dbc8dbe78fe34bc0d7e595d9a9dc9834884ff530eb55
+FROM ubuntu:noble@sha256:68ee22004a9109b44973313b02ff7b1de250f1de0f5ecb628d73f579aaff33ac
 
 # Fail a RUN if any command in a pipe fails (hadolint DL4006)
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
