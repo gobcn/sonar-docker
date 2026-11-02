@@ -1,7 +1,7 @@
 # Sonar Poller image for Broadband Communications North (BCN)
 
 # PIE (PHP Installer for Extensions), pinned so Dependabot can track updates
-FROM ghcr.io/php/pie:1.4.5-bin@sha256:9d3e6d9dafa5ae8cf034489260e206a5aa1b488b29c0ddaea9149826d9e32f52 AS pie
+FROM ghcr.io/php/pie:1.5.5-bin@sha256:3fca03c16df842d02b654dc382db3756058d9c128064f57cace14f8728779ce9 AS pie
 # Ubuntu Noble (Latest tag)
 FROM ubuntu:noble@sha256:68ee22004a9109b44973313b02ff7b1de250f1de0f5ecb628d73f579aaff33ac
 
